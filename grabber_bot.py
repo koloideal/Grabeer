@@ -118,15 +118,15 @@ async def handle_text(message: types.Message):
 async def non_stop(message: types.Message, state: FSMContext):
     try:
         url = message.text.strip()
-        await message.answer('processed...')
+        await message.answer('В процессе...')
         await main(url)
-        button = types.InlineKeyboardButton('получить файл с участниками', callback_data='file')
+        button = types.InlineKeyboardButton('Получить файл с участниками', callback_data='file')
         markup = types.InlineKeyboardMarkup().add(button)
         await message.answer("Участники сохранены в базе данных.", reply_markup=markup)
         await state.finish()
 
     except Exception as e:
-        await message.answer(f'ошибка - {e}')
+        await message.answer(f'Ошибка - {e}')
 
 
 @dp.callback_query_handler()
@@ -139,10 +139,10 @@ async def markup_callback(callback: types.CallbackQuery):
         button3 = types.InlineKeyboardButton('.db', callback_data='db')
         button4 = types.InlineKeyboardButton('.xml', callback_data='xml')
         markup = types.InlineKeyboardMarkup().row(button, button1, button2, button3, button4)
-        await callback.message.answer('в каком формате?', reply_markup=markup)
+        await callback.message.answer('В каком формате?', reply_markup=markup)
 
     elif callback.data == 'txt':
-        await callback.message.answer('processed...')
+        await callback.message.answer('В процессе...')
 
         f = open(f'users/{channel_title}.txt', 'w', encoding='utf-8')
         conn = sqlite3.connect('users/users.sql')
@@ -159,7 +159,7 @@ async def markup_callback(callback: types.CallbackQuery):
         await callback.message.reply_document(open(f'users/{channel_title}.txt', 'rb'))
 
     elif callback.data == 'json':
-        await callback.message.answer('processed...')
+        await callback.message.answer('В процессе...')
 
         with open(f'users/{channel_title}.json', 'w', encoding='utf8') as outfile:
             json.dump(all_users_details, outfile, ensure_ascii=False)
@@ -167,7 +167,7 @@ async def markup_callback(callback: types.CallbackQuery):
         await callback.message.reply_document(open(f'users/{channel_title}.json', 'rb'))
 
     elif callback.data == 'db':
-        await callback.message.answer('processed...')
+        await callback.message.answer('В процессе...')
 
         conn = sqlite3.connect('users/users.sql')
         cur = conn.cursor()
@@ -215,14 +215,14 @@ async def markup_callback(callback: types.CallbackQuery):
         await callback.message.reply_document(open(f'users/{channel_title}.db', 'rb'))
 
     elif callback.data == 'yaml':
-        await callback.message.answer('processed...')
+        await callback.message.answer('В процессе...')
 
         with open(f'users/{channel_title}.yaml', 'w', encoding='utf8') as f:
             yaml.dump(all_users_details, f, allow_unicode=True)
         await callback.message.reply_document(open(f'users/{channel_title}.yaml', 'rb'))
 
     elif callback.data == 'xml':
-        await callback.message.answer('processed...')
+        await callback.message.answer('В процессе...')
 
         root = ET.Element("users")
 
