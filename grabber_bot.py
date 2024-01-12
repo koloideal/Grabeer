@@ -110,7 +110,7 @@ async def handle_text(message: types.Message):
 
 @dp.message_handler(commands=['search'])
 async def handle_text(message: types.Message):
-    await message.answer('Введите ссылку на чат')
+    await message.answer('Введите ссылку на чат:')
     await Form.url.set()
 
 
@@ -120,28 +120,27 @@ async def non_stop(message: types.Message, state: FSMContext):
         url = message.text.strip()
         await message.answer('В процессе...')
         await main(url)
-        button = types.InlineKeyboardButton('Получить файл с участниками', callback_data='file')
-        markup = types.InlineKeyboardMarkup().add(button)
-        await message.answer("Участники сохранены в базе данных.", reply_markup=markup)
-        await state.finish()
-
-    except Exception as e:
-        await message.answer(f'Ошибка - {e}')
-
-
-@dp.callback_query_handler()
-async def markup_callback(callback: types.CallbackQuery):
-    global channel, all_users_details, channel_title
-    if callback.data == 'file':
         button = types.InlineKeyboardButton('.txt', callback_data='txt')
         button1 = types.InlineKeyboardButton('.json', callback_data='json')
         button2 = types.InlineKeyboardButton('.yaml', callback_data='yaml')
         button3 = types.InlineKeyboardButton('.db', callback_data='db')
         button4 = types.InlineKeyboardButton('.xml', callback_data='xml')
         markup = types.InlineKeyboardMarkup().row(button, button1, button2, button3, button4)
-        await callback.message.answer('В каком формате?', reply_markup=markup)
+        await message.answer("Участники сохранены в базе данных.\n\nВ каком формате хотите получить файл?", reply_markup=markup)
+        await state.finish()
 
-    elif callback.data == 'txt':
+    except Exception as e:
+        await message.answer(f'Ошибка - {e}')
+
+@dp.message_handler()
+async def none_command(message: types.Message):
+    await message.answer('Команда нераспознана, введите <i>/search</i> для поиска информации.')
+
+
+@dp.callback_query_handler()
+async def markup_callback(callback: types.CallbackQuery):
+    global channel, all_users_details, channel_title
+    if callback.data == 'txt':
         await callback.message.answer('В процессе...')
 
         f = open(f'users/{channel_title}.txt', 'w', encoding='utf-8')
