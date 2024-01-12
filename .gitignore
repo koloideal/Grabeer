@@ -3,3 +3,5 @@ kolo_id.session-journal
 /users
 config.ini
 /.idea
+/Lib
+/Scripts

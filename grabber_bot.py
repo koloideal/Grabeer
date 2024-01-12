@@ -134,7 +134,7 @@ async def non_stop(message: types.Message, state: FSMContext):
 
 @dp.message_handler()
 async def none_command(message: types.Message):
-    await message.answer('Команда нераспознана, введите <i>/search</i> для поиска информации.')
+    await message.answer('Команда нераспознана, введите\n<i>/search</i> для поиска информации.')
 
 
 @dp.callback_query_handler()
