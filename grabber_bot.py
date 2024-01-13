@@ -1,3 +1,4 @@
+import datetime
 from dotenv import load_dotenv
 import sqlite3
 from aiogram import Bot, Dispatcher, types
@@ -130,7 +131,10 @@ async def non_stop(message: types.Message, state: FSMContext):
         await state.finish()
 
     except Exception as e:
-        await message.answer(f'Ошибка - {e}')
+        await message.answer(f'Введённый текст не является ссылкой на чат')
+        with open(f'errors.txt', 'a', encoding='utf8') as outfile:
+            outfile.write(f'Дата: {datetime.datetime.now()}\nОшибка: {e}\n\n')
+        await state.finish()
 
 @dp.message_handler()
 async def none_command(message: types.Message):
