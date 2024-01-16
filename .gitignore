@@ -5,3 +5,4 @@ config.ini
 /.idea
 /venv
 errors.txt
+/Python
