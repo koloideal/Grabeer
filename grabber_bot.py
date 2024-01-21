@@ -119,7 +119,7 @@ async def handle_text(message: types.Message):
 async def non_stop(message: types.Message, state: FSMContext):
     try:
         url = message.text.strip()
-        await message.answer('В процессе...')
+        msg = await message.answer('В процессе...')
         await main(url)
         button = types.InlineKeyboardButton('.txt', callback_data='txt')
         button1 = types.InlineKeyboardButton('.json', callback_data='json')
@@ -127,11 +127,11 @@ async def non_stop(message: types.Message, state: FSMContext):
         button3 = types.InlineKeyboardButton('.db', callback_data='db')
         button4 = types.InlineKeyboardButton('.xml', callback_data='xml')
         markup = types.InlineKeyboardMarkup().row(button, button1, button2, button3, button4)
-        await message.answer("Участники сохранены в базе данных.\n\nВ каком формате хотите получить файл?", reply_markup=markup)
+        await msg.edit_text("Участники сохранены в базе данных.\n\nВ каком формате хотите получить файл?", reply_markup=markup)
         await state.finish()
 
     except Exception as e:
-        await message.answer(f'Введённый текст не является ссылкой на чат')
+        await msg.edit_text(f'Введённый текст не является ссылкой на чат')
         with open(f'errors.txt', 'a', encoding='utf8') as outfile:
             outfile.write(f'Дата: {datetime.datetime.now()}\nОшибка: {e}\n\n')
         await state.finish()
@@ -145,7 +145,7 @@ async def none_command(message: types.Message):
 async def markup_callback(callback: types.CallbackQuery):
     global channel, all_users_details, channel_title
     if callback.data == 'txt':
-        await callback.message.answer('В процессе...')
+        msg = await callback.message.answer('В процессе...')
 
         f = open(f'users/{channel_title}.txt', 'w', encoding='utf-8')
         conn = sqlite3.connect('users/users.sql')
@@ -159,18 +159,20 @@ async def markup_callback(callback: types.CallbackQuery):
         conn.close()
         f.close()
 
+        await msg.delete()
         await callback.message.reply_document(open(f'users/{channel_title}.txt', 'rb'))
 
     elif callback.data == 'json':
-        await callback.message.answer('В процессе...')
+        msg = await callback.message.answer('В процессе...')
 
         with open(f'users/{channel_title}.json', 'w', encoding='utf8') as outfile:
             json.dump(all_users_details, outfile, ensure_ascii=False)
 
+        await msg.delete()
         await callback.message.reply_document(open(f'users/{channel_title}.json', 'rb'))
 
     elif callback.data == 'db':
-        await callback.message.answer('В процессе...')
+        msg = await callback.message.answer('В процессе...')
 
         conn = sqlite3.connect('users/users.sql')
         cur = conn.cursor()
@@ -215,17 +217,20 @@ async def markup_callback(callback: types.CallbackQuery):
         new_new_cur.close()
         new_new_conn.close()
 
+        await msg.delete()
         await callback.message.reply_document(open(f'users/{channel_title}.db', 'rb'))
 
     elif callback.data == 'yaml':
-        await callback.message.answer('В процессе...')
+        msg = await callback.message.answer('В процессе...')
 
         with open(f'users/{channel_title}.yaml', 'w', encoding='utf8') as f:
             yaml.dump(all_users_details, f, allow_unicode=True)
+
+        await msg.delete()
         await callback.message.reply_document(open(f'users/{channel_title}.yaml', 'rb'))
 
     elif callback.data == 'xml':
-        await callback.message.answer('В процессе...')
+        msg = await callback.message.answer('В процессе...')
 
         root = ET.Element("users")
 
@@ -244,6 +249,7 @@ async def markup_callback(callback: types.CallbackQuery):
 
         tree.write(f'users/{channel_title}.xml')
 
+        await msg.delete()
         await callback.message.reply_document(open(f'users/{channel_title}.xml', 'rb'))
 
 
