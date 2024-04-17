@@ -253,5 +253,4 @@ async def markup_callback(callback: types.CallbackQuery):
         await callback.message.reply_document(open(f'users/{channel_title}.xml', 'rb'))
 
 
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+executor.start_polling(dp, skip_updates=True)
