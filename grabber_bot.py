@@ -19,10 +19,10 @@ load_dotenv()
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-api_id = config['Telegram']['api_id']
-api_hash = config['Telegram']['api_hash']
-username = config['Telegram']['username']
-bot_token = config['Telegram']['bot_token']
+api_id = 27312344
+api_hash = '88aca2bfececa92921acad3945bfea4d'
+username = 'kolo_id'
+bot_token = '6951943355:AAEELWp8FgFsyU8LMuMiw2XHWApb69YrIDQ'
 
 bot = Bot(token=bot_token, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
