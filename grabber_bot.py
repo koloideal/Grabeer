@@ -21,7 +21,7 @@ config.read("config.ini")
 
 api_id = config['Telegram']['api_id']
 api_hash = config['Telegram']['api_hash']
-username = 'kolo_id'
+username = config['Telegram']['useraname']
 bot_token = config['Telegram']['bot_token']
 
 bot = Bot(token=bot_token, parse_mode=types.ParseMode.HTML)
